@@ -5,8 +5,8 @@ pygame.init()
 
 FPS = 60
 playerSize = 128
-displayX = 800
-displayY = 600
+displayX = 1080
+displayY = 720
 fpsClock = pygame.time.Clock()
 
 
@@ -55,8 +55,11 @@ while True:
                 playerY -= gravityVelocity
             if playerY <= 10:
                 grounded = True
-
-    DISPLAYSURF.blit(playerImg, (playerX, playerY))
+                
+    if gravity == 'normal':
+        DISPLAYSURF.blit(playerImg, (playerX, playerY))
+    else:
+        DISPLAYSURF.blit(pygame.transform.flip(playerImg, False, True), (playerX, playerY))
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -70,6 +73,7 @@ while True:
                 else:
                     gravity = 'normal'
                     grounded = False
+                
 
     pygame.display.update()
     fpsClock.tick(FPS)
