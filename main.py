@@ -23,43 +23,73 @@ direction = 'right'
 gravity = 'normal'
 grounded = False
 
+class Player():
+    def __init__(self, playerX, playerY, grounded, gravity, direction):
+        self.playerX = playerX
+        self.playerY = playerY
+        self.grounded = grounded
+        self.gravity = gravity
+        self.playerImg = pygame.image.load('C:/Users/loren/source/repos/Python/GravityShift/player.png')
+        self.playerSpeed = 2
+        self.gravityVelocity = 5
+        self.direction = direction
+        self.playerSize = 128
+    
+        
+    def gravityShift(self):
+        if self.grounded:
+            if self.gravity == 'normal':
+                self.gravity = 'inverse'
+                self.grounded = False
+            else:
+                self.gravity = 'normal'
+                self.grounded = False
+                
+    def draw(self):
+        if self.gravity == 'normal':
+            DISPLAYSURF.blit(self.playerImg, (self.playerX, self.playerY))
+        else:
+            DISPLAYSURF.blit(pygame.transform.flip(self.playerImg, False, True), (self.playerX, self.playerY))
+    
+    def move(self):
+        if player.direction == 'right':
+            player.playerX += player.playerSpeed
+            if player.playerX >= (displayX-player.playerSize):
+                player.direction = 'left'
+            if player.gravity == 'normal':
+                if not player.grounded:
+                    player.playerY += player.gravityVelocity
+                if player.playerY >= (displayY-player.playerSize):
+                    player.grounded = True
+            elif player.gravity == 'inverse':
+                if not player.grounded:
+                    player.playerY -= player.gravityVelocity
+                if player.playerY <= 10:
+                    player.grounded = True
+            
+        elif player.direction == 'left':
+            player.playerX -= player.playerSpeed
+            if player.playerX <= 0:
+                player.direction = 'right'
+            if player.gravity == 'normal':
+                if not player.grounded:
+                    player.playerY += player.gravityVelocity
+                if player.playerY >= (displayY-player.playerSize):
+                    player.grounded = True
+            elif player.gravity == 'inverse':
+                if not player.grounded:
+                    player.playerY -= player.gravityVelocity
+                if player.playerY <= 10:
+                    player.grounded = True
+
+player = Player(playerX, playerY, grounded, gravity, direction)
+
 while True: 
     DISPLAYSURF.fill(WHITE)
 
-    if direction == 'right':
-        playerX += playerSpeed
-        if playerX >= (displayX-playerSize):
-            direction = 'left'
-        if gravity == 'normal':
-            if not grounded:
-                playerY += gravityVelocity
-            if playerY >= (displayY-playerSize):
-                grounded = True
-        elif gravity == 'inverse':
-            if not grounded:
-                playerY -= gravityVelocity
-            if playerY <= 10:
-                grounded = True
-            
-    elif direction == 'left':
-        playerX -= playerSpeed
-        if playerX <= 0:
-            direction = 'right'
-        if gravity == 'normal':
-            if not grounded:
-                playerY += gravityVelocity
-            if playerY >= (displayY-playerSize):
-                grounded = True
-        elif gravity == 'inverse':
-            if not grounded:
-                playerY -= gravityVelocity
-            if playerY <= 10:
-                grounded = True
-                
-    if gravity == 'normal':
-        DISPLAYSURF.blit(playerImg, (playerX, playerY))
-    else:
-        DISPLAYSURF.blit(pygame.transform.flip(playerImg, False, True), (playerX, playerY))
+    player.draw()
+    player.move()
+
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -67,12 +97,7 @@ while True:
             sys.exit()
         elif event.type == KEYDOWN:
             if event.key==K_SPACE:
-                if gravity == 'normal':
-                    gravity = 'inverse'
-                    grounded = False
-                else:
-                    gravity = 'normal'
-                    grounded = False
+                player.gravityShift()
                 
 
     pygame.display.update()
