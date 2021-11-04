@@ -1,7 +1,11 @@
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
+from player import Player
+from menu import *
 
 pygame.init()
+pygame.font.init()
 
 FPS = 60
 playerSize = 128
@@ -14,91 +18,31 @@ DISPLAYSURF = pygame.display.set_mode((displayX, displayY), 0, 32)
 pygame.display.set_caption('Gravity Shift')
 
 WHITE = (255, 255, 255)
-playerImg = pygame.image.load('C:/Users/loren/source/repos/Python/GravityShift/player.png')
-playerX = 10
-playerY = (displayY-playerSize)-10
-playerSpeed = 2
-gravityVelocity = 5
-direction = 'right'
-gravity = 'normal'
-grounded = False
+BLACK = (0, 0, 0)
 
-class Player():
-    def __init__(self, playerX, playerY, grounded, gravity, direction):
-        self.playerX = playerX
-        self.playerY = playerY
-        self.grounded = grounded
-        self.gravity = gravity
-        self.playerImg = pygame.image.load('C:/Users/loren/source/repos/Python/GravityShift/player.png')
-        self.playerSpeed = 2
-        self.gravityVelocity = 5
-        self.direction = direction
-        self.playerSize = 128
-    
-        
-    def gravityShift(self):
-        if self.grounded:
-            if self.gravity == 'normal':
-                self.gravity = 'inverse'
-                self.grounded = False
-            else:
-                self.gravity = 'normal'
-                self.grounded = False
-                
-    def draw(self):
-        if self.gravity == 'normal':
-            DISPLAYSURF.blit(self.playerImg, (self.playerX, self.playerY))
-        else:
-            DISPLAYSURF.blit(pygame.transform.flip(self.playerImg, False, True), (self.playerX, self.playerY))
-    
-    def move(self):
-        if player.direction == 'right':
-            player.playerX += player.playerSpeed
-            if player.playerX >= (displayX-player.playerSize):
-                player.direction = 'left'
-            if player.gravity == 'normal':
-                if not player.grounded:
-                    player.playerY += player.gravityVelocity
-                if player.playerY >= (displayY-player.playerSize):
-                    player.grounded = True
-            elif player.gravity == 'inverse':
-                if not player.grounded:
-                    player.playerY -= player.gravityVelocity
-                if player.playerY <= 10:
-                    player.grounded = True
-            
-        elif player.direction == 'left':
-            player.playerX -= player.playerSpeed
-            if player.playerX <= 0:
-                player.direction = 'right'
-            if player.gravity == 'normal':
-                if not player.grounded:
-                    player.playerY += player.gravityVelocity
-                if player.playerY >= (displayY-player.playerSize):
-                    player.grounded = True
-            elif player.gravity == 'inverse':
-                if not player.grounded:
-                    player.playerY -= player.gravityVelocity
-                if player.playerY <= 10:
-                    player.grounded = True
+player = Player(displayX, displayY)
+menu = Menu(displayX, displayY, player)
 
-player = Player(playerX, playerY, grounded, gravity, direction)
+playing = False
 
-while True: 
-    DISPLAYSURF.fill(WHITE)
+while True:
+    if not playing:
+        menu.draw()
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    playing = True
+        pygame.display.update()
+    while playing:
+        player.draw()
+        player.move()
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    player.gravityShift()
 
-    player.draw()
-    player.move()
-
-
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == KEYDOWN:
-            if event.key==K_SPACE:
-                player.gravityShift()
-                
-
-    pygame.display.update()
-    fpsClock.tick(FPS)
+        pygame.display.update()
+        fpsClock.tick(FPS)
