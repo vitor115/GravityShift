@@ -14,10 +14,10 @@ displayY = 720
 fpsClock = pygame.time.Clock()
 
 
-DISPLAYSURF = pygame.display.set_mode((displayX, displayY), 0, 32)
+DISPLAYSURF = pygame.display.set_mode((displayX, displayY), 0, 32) 
 pygame.display.set_caption('Gravity Shift')
 
-WHITE = (255, 255, 255)
+
 BLACK = (0, 0, 0)
 
 player = Player(displayX, displayY)
@@ -45,4 +45,8 @@ while True:
                     player.gravityShift()
 
         pygame.display.update()
+        if player.colisão():
+            pygame.quit()
+            sys.exit()
         fpsClock.tick(FPS)
+        
