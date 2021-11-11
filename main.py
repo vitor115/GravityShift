@@ -14,7 +14,7 @@ displayY = 720
 fpsClock = pygame.time.Clock()
 
 
-DISPLAYSURF = pygame.display.set_mode(( displayX, displayY), 0, 32) 
+DISPLAYSURF = pygame.display.set_mode((displayX, displayY), 0, 32) 
 pygame.display.set_caption('Gravity Shift')
 
 
