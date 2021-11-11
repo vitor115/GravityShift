@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Player():
     def __init__(self, displayX, displayY):
@@ -9,10 +10,17 @@ class Player():
         self.playerY = (self.displayY-self.playerSize)-10
         self.grounded = False
         self.gravity = "normal"
-        self.playerImg = pygame.image.load('player.png')
-        self.backImg=pygame.image.load("city background.jpg").convert()
+        self.filepath = os.path.abspath(__file__)
+        self.filedir = os.path.dirname(self.filepath)
+        self.playerImgPath = os.path.join(self.filedir, "player.png")
+        self.backImgPath = os.path.join(self.filedir, "city background.jpg")
+        self.blocoPath = os.path.join(self.filedir, "selva.jpg")
+        self.playerImg = pygame.image.load(self.playerImgPath)
+
+        self.backImg=pygame.image.load(self.backImgPath).convert()
         self.backImg=pygame.transform.scale(self.backImg,(1080,720))
-        self.bloco=pygame.image.load("selva.jpg").convert()
+
+        self.bloco=pygame.image.load(self.blocoPath).convert()
         self.bloco=pygame.transform.scale(self.bloco,(72,72))
         self.map=[0]*30
         for i in range(0,30):
